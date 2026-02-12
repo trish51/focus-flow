@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Focus Flow</h1>
+    <div id="timer-display">25:00</div>
+    
+    <input type="text" id="session-note" placeholder="What are you working on? (Optional)">
+
+    <div class="controls">
+        <button id="start-btn">Start</button>
+        <button id="pause-btn">Pause</button>
+    </div>
+    <p>XP: <span id="xp-count">{{ user.xp if user else 0 }}</span></p>
+</div>
+{% endblock %}
