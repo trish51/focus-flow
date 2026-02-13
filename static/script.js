@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const noteInput = document.getElementById('session-note'); 
     const xpSpan = document.getElementById('xp-count');
 
-    let globalTimerNo = 2;
-    let timeLeft = globalTimerNo; // 25 minutes in seconds
+    let globalTimerNo = 1;
+    let timeLeft = globalTimerNo; 
     let timerId = null;
 
     function updateDisplay() {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     startBtn.addEventListener('click', () => {
-        if (timerId) return; // Already running
+        if (timerId) return; 
         
         timerId = setInterval(() => {
             timeLeft--;

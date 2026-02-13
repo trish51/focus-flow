@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container shop-layout" style="max-width: 1000px;">
+    <h1>The Focus Shop</h1>
+    <p>Your Balance: <strong style="color: #e94560;">{{ user_xp }} XP</strong></p>
+
+    <div class="shop-grid">
+    <div class="item-card" style="background: #16213e; padding: 25px; border-radius: 15px; border: 1px solid #0f3460; display: flex; flex-direction: column; justify-content: space-between;">
+        <div class="item-info" style="flex-grow: 1;">
+            <h3 style="color: #e94560; margin-bottom: 10px;">Classic Focus</h3>
+            <p style="font-size: 0.85rem; color: #888; margin-bottom: 10px;">The original navy and crimson look.</p>
+            <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 15px;">FREE</p>
+        </div>
+        
+        <div style="margin-top: 15px; width: 100%;">
+            {% if session["theme"] == 'default' or not session["theme"] %}
+                <button disabled style="background: #2ecc71; color: white; width: 100%; height: 50px; border-radius: 8px; font-weight: bold; border: none; cursor: default; display: block; margin: 0;">Active</button>
+            {% else %}
+                <form action="/equip" method="post" style="margin: 0; width: 100%;">
+                    <input type="hidden" name="item_id" value="0">
+                    <button type="submit" style="background: #9b59b6; color: white; width: 100%; height: 50px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; display: block; margin: 0;">Use Theme</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% for item in items %}
+    <div class="item-card" style="background: #16213e; padding: 25px; border-radius: 15px; border: 1px solid #0f3460; display: flex; flex-direction: column; justify-content: space-between;">
+        <div class="item-info" style="flex-grow: 1;">
+            <h3 style="color: #e94560; margin-bottom: 10px;">{{ item.name }}</h3>
+            <p style="font-size: 0.85rem; color: #888; margin-bottom: 10px;">{{ item.description }}</p>
+            <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 15px;">{{ item.price }} XP</p>
+        </div>
+        
+        <div style="margin-top: 15px; width: 100%;">
+            {% if item.id in owned_ids %}
+                {% if session["theme"] == item.name.lower().replace(" ", "-") %}
+                    <button disabled style="background: #2ecc71; color: white; width: 100%; height: 50px; border-radius: 8px; font-weight: bold; border: none; cursor: default; display: block; margin: 0;">Active</button>
+                {% else %}
+                    <form action="/equip" method="post" style="margin: 0; width: 100%;">
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <button type="submit" style="background: #9b59b6; color: white; width: 100%; height: 50px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; display: block; margin: 0;">Use Theme</button>
+                    </form>
+                {% endif %}
+            {% elif user_xp >= item.price %}
+                <form action="/buy" method="post" style="margin: 0; width: 100%;">
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <button type="submit" style="background: #e94560; color: white; width: 100%; height: 50px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; display: block; margin: 0;">Buy</button>
+                </form>
+            {% else %}
+                <button disabled style="background: #2a2a40; color: #555; width: 100%; height: 50px; border-radius: 8px; font-weight: bold; border: none; cursor: not-allowed; display: block; opacity: 0.5; margin: 0;">Too Expensive</button>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endblock %}

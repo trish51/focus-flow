@@ -90,9 +90,14 @@ def login():
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], password):
             return "Invalid username and/or password", 403
 
-        # Remeber shich user logged in
+        # Remeber which user logged in
         session["user_id"] = rows[0]["id"]
         session["username"] = rows[0]["username"]
+
+        # Ensures user selected theme is on
+        session["user_id"] = rows[0]["id"]
+        session["username"] = rows[0]["username"]
+        session["theme"] = rows[0]["active_theme"]
 
         return redirect("/")
 
@@ -112,6 +117,107 @@ def history():
     
     return render_template("history.html", sessions=sessions)
 
+# XP stop
+@app.route("/store")
+@login_required
+def store():
+    user_id = session["user_id"]
+
+    # Get users current XP
+    user_data = db.execute(
+        "SELECT xp FROM users WHERE id = ?", 
+        user_id
+    )
+    user_xp = user_data[0]["xp"]
+
+    # Get items from the store
+    items = db.execute("SELECT * FROM items")
+
+    # Get ids of what the user already bought
+    owned_rows = db.execute(
+        "SELECT item_id FROM purchases WHERE user_id = ?",
+        user_id
+    )
+    owned_ids = [row["item_id"] for row in owned_rows]
+
+    return render_template("store.html", items=items, user_xp=user_xp, owned_ids=owned_ids)
+
+# Spending XP
+@app.route("/buy",  methods=["POST"])
+@login_required
+def buy():
+    item_id = request.form.get("item_id")
+    user_id = session["user_id"]
+
+    # Item details
+    item = db.execute(
+        "SELECT * FROM items WHERE id = ?",
+        item_id
+    )
+    if not item:
+        return "Item not found", 400
+
+    price = item[0]["price"]
+
+    # Check if user can afford
+    user_data = db.execute(
+        "SELECT xp FROM users WHERE id = ?",
+        user_id
+    )
+    current_xp = user_data[0]["xp"]
+
+    if current_xp < price:
+        return "Not enough XP", 400
+
+    # Deduct XP and record purchases
+    db.execute(
+        "UPDATE users SET xp = xp - ? WHERE id = ?", 
+        price, user_id
+    )
+    db.execute(
+        "INSERT INTO purchases (user_id, item_id) VALUES (?,?)",
+        user_id, item_id
+    )
+
+    return redirect("/store")
+
+# Equiping themes
+@app.route("/equip",  methods=["POST"])
+@login_required
+def equip():
+    item_id = request.form.get("item_id")
+    user_id = session["user_id"]
+
+    # Check if default
+    if item_id == "0":
+        db.execute(
+            "UPDATE users SET active_theme = 'default' WHERE id = ?", 
+            user_id
+        )
+        session["theme"] = "default"
+        return redirect("/store")
+
+    # Otherwise verify ownership of purchasable themes
+    check = db.execute(
+        "SELECT * FROM purchases WHERE user_id = ? AND item_id = ?", 
+        user_id, item_id
+    )
+
+    if check:
+        # get the name and use it in CSS
+        item = db.execute(
+            "SELECT name FROM items WHERE id = ?", 
+            item_id
+        )
+        theme_name = item[0]["name"].lower().replace(" ","-")
+
+        db.execute(
+            "UPDATE users SET active_theme = ? WHERE id = ?",
+            theme_name, user_id
+        )
+        session["theme"] = theme_name
+    
+    return redirect("/store")
 
 # Logout logic
 @app.route("/logout")

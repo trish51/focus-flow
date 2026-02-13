@@ -1,4 +1,4 @@
-/* 1. Global Reset */
+/* Global Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -14,7 +14,7 @@ body {
     min-height: 100vh;
 }
 
-/* 2. Navigation bar */
+/* Navigation bar */
 nav {
     background-color: #16213e;
     padding: 1rem;
@@ -27,7 +27,7 @@ nav {
 .nav-content {
     display: flex;
     align-items: center;
-    gap: 30px; /* Space between username and the link group */
+    gap: 30px;
 }
 
 .nav-user {
@@ -54,7 +54,7 @@ nav a:hover {
     text-decoration: underline;
 }
 
-/* 3. Main content area */
+/*  Main content area */
 main {
     flex-grow: 1;
     display: flex;
@@ -63,7 +63,7 @@ main {
     padding: 20px;
 }
 
-/* 4. The Container */
+/* The Container */
 .container {
     width: 95%;
     max-width: 450px;
@@ -78,7 +78,7 @@ main {
     gap: 15px; /* Keeps vertical spacing even */
 }
 
-/* 5. Timer Display - Fixed Gap */
+/* Timer Display - Fixed Gap */
 h1 {
     margin: 0;
     font-size: 2.5rem;
@@ -93,7 +93,7 @@ h1 {
     margin: 0;
 }
 
-/* 6. Instructions (Details/Summary) */
+/* Instructions (Details/Summary) */
 details {
     width: 100%;
 }
@@ -106,7 +106,7 @@ summary {
     outline: none;
 }
 
-/* 7. Inputs */
+/* Inputs */
 input {
     width: 100%;
     padding: 12px;
@@ -118,7 +118,7 @@ input {
     font-size: 1rem;
 }
 
-/* 8. Controls and Buttons */
+/* Controls and Buttons */
 .controls {
     display: flex;
     gap: 10px;
@@ -128,7 +128,7 @@ input {
 }
 
 button {
-    flex: 1; /* Makes Start and Pause equal width */
+    flex: 1; 
     background: #e94560;
     color: white;
     border: none;
@@ -203,3 +203,216 @@ table tr:hover td:nth-child(2) {
     }
 }
 
+/* Themes */
+/* Shop Grid */
+.shop-layout {
+    display: block !important; /* Overrides the flex-centering in .container */
+    text-align: center;
+}
+
+.shop-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr; /* This makes all boxes in all rows the same height */
+    gap: 20px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.item-card {
+    background: #16213e;
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid #0f3460;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-card form {
+    margin: 0;
+    width: 100%;
+}
+
+.item-info {
+    flex-grow: 1; 
+    margin-bottom: 20px;
+}
+
+
+.item-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.item-card button {
+    height: 45px; /* Set a fixed height so 'Active' matches 'Use Theme' */
+    padding: 0 24px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px; /* Tiny bit of breathing room at the bottom */
+}
+
+.item-card button:disabled {
+    background-color: #2a2a40;
+    color: #555;
+    cursor: not-allowed;
+    border: 1px solid #0f3460;
+}
+
+/* ---THEME SETUP--- */
+/* Crimson Night: Global */
+body.crimson-night { 
+    background-color: #0a0000; 
+    color: #ffcccc;       
+}
+
+body.crimson-night .container, 
+body.crimson-night nav { 
+    background-color: #1a0202; 
+    color: #ffcccc;      
+    border-color: #4a0000; 
+}
+
+/* Primary Accents */
+body.crimson-night h1, 
+body.crimson-night h3, 
+body.crimson-night #timer-display, 
+body.crimson-night nav a, 
+body.crimson-night strong { 
+    color: #ff0000 !important; 
+}
+
+/* Input Box Styling */
+body.crimson-night input {
+    background-color: #1a0202; 
+    color: #ffcccc;
+    border: 1px solid #4a0000;
+}
+body.crimson-night input::placeholder { color: #5c0000; }
+
+/* Buttons */
+body.crimson-night button { 
+    background-color: #950101 !important; /* Blood Red */
+}
+
+/* Success button override for 'Active' state */
+body.crimson-night button:disabled[style*="#2ecc71"] { 
+    background-color: #2ecc71 !important; 
+    color: white !important; 
+}
+
+/* ------------------- */
+/* Midnight Forest */
+body.midnight-forest {
+    background-color: #0b1a0f;
+    color: #d0ffe0;
+}
+
+body.midnight-forest h1,
+body.midnight-forest h3,
+body.midnight-forest #timer-display,
+body.midnight-forest nav a,
+body.midnight-forest strong {
+    color: #2ecc71 !important;
+}
+
+/* Input Box Styling */
+body.midnight-forest input {
+    background-color: #112a18;
+    color: #d0ffe0;
+    border: 1px solid #2ecc71;
+}
+
+body.midnight-forest input::placeholder {
+    color: #1e4d2b;
+}
+
+/* Buttons */
+body.midnight-forest button {
+    background-color: #2ecc71 !important;
+}
+
+body.midnight-forest button:disabled[style*="#2ecc71"] {
+    background-color: #2ecc71 !important;
+}
+
+/* ------------------- */
+/* Golden Hour */
+body.golden-hour {
+    background-color: #1a150b;
+    color: #fff5e0;
+}
+
+body.golden-hour h1,
+body.golden-hour h3,
+body.golden-hour #timer-display,
+body.golden-hour nav a,
+body.golden-hour strong {
+    color: #f1c40f !important;
+}
+
+/* Input Box Styling */
+body.golden-hour input {
+    background-color: #2a2211;
+    color: #fff5e0;
+    border: 1px solid #f1c40f;
+}
+
+body.golden-hour input::placeholder {
+    color: #5e4d26;
+}
+
+/* Buttons */
+body.golden-hour button {
+    background-color: #f1c40f !important;
+    color: #1a150b !important;
+}
+
+body.golden-hour button:disabled[style*="#2ecc71"] {
+    background-color: #2ecc71 !important;
+    color: white !important;
+}
+
+/* ------------------- */
+/* Neon Nebula Theme*/
+body.neon-nebula {
+    background-color: #1a0b2e; 
+    color: #e0d0ff;     
+}
+
+body.neon-nebula .container, 
+body.neon-nebula nav {
+    background-color: #240b36; 
+    border-color: #4b0082;  
+}
+
+/* Primary Accents */
+body.neon-nebula h1, 
+body.neon-nebula h3,
+body.neon-nebula #timer-display, 
+body.neon-nebula nav a,
+body.neon-nebula strong {    
+    color: #9616ff !important; 
+}
+
+/* Input Box Styling */
+body.neon-nebula input {
+    background-color: #1a0b2e; 
+    color: #9616ff;            
+    border: 1px solid #4b0082;
+}
+body.neon-nebula input::placeholder { color: #5d327a; }
+
+/* Buttons */
+body.neon-nebula button {
+    background-color: #bc13fe !important; 
+}
+
+/* Success button override for 'Active' state */
+body.neon-nebula button:disabled[style*="#2ecc71"] {
+    background-color: #2ecc71 !important;
+    color: white !important;
+    opacity: 1 !important;
+}
