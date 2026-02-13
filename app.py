@@ -21,12 +21,18 @@ def login_required(f):
 @app.route("/")
 @login_required
 def index():
-    # Look up current users XP
-    user = db.execute(
-        "SELECT * FROM users WHERE id = ?",
-        session["user_id"]
-    )[0]
-    return render_template("index.html", user=user)
+    # 1. Get the user_id from the session
+    user_id = session.get("user_id")
+    
+    # 2. Check the database
+    rows = db.execute("SELECT * FROM users WHERE id = ?", user_id)
+    
+    # 3. If user doesn't exist, clear session and go to login
+    if not rows:
+        session.clear()
+        return redirect("/login")
+        
+    return render_template("index.html", user=rows[0])
 
 # Register Logic
 @app.route("/register", methods=["GET", "POST"])
@@ -57,6 +63,7 @@ def register():
 
             # Logs them in immediatley
             session["user_id"] = new_user_id
+            session["username"] = username
             return redirect("/")
         except ValueError:
             return "Username already exists.", 400
@@ -85,10 +92,26 @@ def login():
 
         # Remeber shich user logged in
         session["user_id"] = rows[0]["id"]
+        session["username"] = rows[0]["username"]
 
         return redirect("/")
 
     return render_template("login.html")
+
+# History
+@app.route("/history")
+@login_required
+def history():
+    # Fetch all sessions for the current user
+    sessions = db.execute("""
+        SELECT minutes, note, strftime('%Y-%m-%d %H:%M', timestamp) as time 
+        FROM sessions 
+        WHERE user_id = ? 
+        ORDER BY timestamp DESC
+    """, session["user_id"])
+    
+    return render_template("history.html", sessions=sessions)
+
 
 # Logout logic
 @app.route("/logout")

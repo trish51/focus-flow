@@ -3,14 +3,23 @@
 {% block content %}
 <div class="container">
     <h1>Focus Flow</h1>
+    
     <div id="timer-display">25:00</div>
+    
+    <details>
+        <summary>How does this work?</summary>
+        <p style="background: #1a1a2e; border-radius: 8px; padding: 10px; margin-top: 5px; font-size: 0.85rem;">
+            Focus for 25 minutes to earn 10 XP. Record your task below!
+        </p>
+    </details>
     
     <input type="text" id="session-note" placeholder="What are you working on? (Optional)">
 
-    <div class="controls">
-        <button id="start-btn">Start</button>
-        <button id="pause-btn">Pause</button>
+    <div class="controls" style="display: flex; gap: 10px; width: 100%; justify-content: center; margin-top: 10px;">
+        <button id="start-btn" style="flex: 1;">Start</button>
+        <button id="pause-btn" style="flex: 1;">Pause</button>
     </div>
-    <p>XP: <span id="xp-count">{{ user.xp if user else 0 }}</span></p>
+    
+    <p style="margin: 0; padding-top: 10px;">XP: <span id="xp-count">{{ user.xp if user else 0 }}</span></p>
 </div>
 {% endblock %}

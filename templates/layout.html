@@ -7,11 +7,20 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+    <header style="text-align: center; padding: 20px;">
+        {% if not session["user_id"] %}
+            <h1 style="font-size: 3rem; color: #e94560;">Focus Flow</h1>
+        {% else %}
+            <h3 style="color: #e94560;">Focus Flow</h3>
+        {% endif %}
+    </header>
+
     <nav>
-        <a href="/">Timer</a>
         {% if session["user_id"] %}
+            <div class="nav-user">Hello, {{ session["username"] }}</div>
+            <div class="nav-links">
+            <a href="/">Timer</a>
             <a href="/history">History</a>
-            <a href="/store">Store</a>
             <a href="/logout">Logout</a>
         {% else %}
             <a href="/login">Login</a>
@@ -22,5 +31,6 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+    <script src="/static/script.js"></script>
 </body>
 </html>

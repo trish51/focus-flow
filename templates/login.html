@@ -3,6 +3,14 @@
 {% block content %}
 <div class="container">
     <h2>Login to Focus Flow</h2>
+
+    <div style="margin-bottom: 30px; border-bottom: 1px solid #0f3460; padding-bottom: 20px;">
+        <p style="color: #888; font-size: 1.1rem;">
+            <strong>Level up your productivity.</strong> <br>
+            Focus Flow uses the Pomodoro technique to help you stay on track, earn XP, and unlock rewards.
+        </p>
+    </div>
+
     <form action="/login" method="post">
         <input name="username" placeholder="Username" type="text" required autofocus>
         <input name="password" placeholder="Password" type="password" required>
