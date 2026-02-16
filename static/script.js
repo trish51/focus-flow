@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const noteInput = document.getElementById('session-note'); 
     const xpSpan = document.getElementById('xp-count');
 
-    let globalTimerNo = 1;
+    let globalTimerNo = 25 * 60;
     let timeLeft = globalTimerNo; 
     let timerId = null;
 
