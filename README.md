@@ -56,7 +56,7 @@ The _focus.db_ database is a relational SQLite database consisting of four main 
 #### Design Choices:
 One of the challenges I had was the shop grid.  I decided to use CSS Grid with _grid-auto-rows: 1fr_ and _Flexbox_ for the cards.  This was to make sure that even if the descriptions were different lengths, the buttons would always line up perfectly at the bottom of each box.  I also chose to use **inline styles** for some specific button states to make sure any global CSS changes on other pages wouldn't break it.
 
-Beyond the Shop Grid, I had to figure out how to handle the active state of a theme.  Initially I thought about updating the database every time the user changed the theme, but realized the _flask session_ object would be much faster.  By storing the active theme in the session, the CSS is applied instantly to all pages without needing to query the database or reload the page.
+Beyond the Shop Grid, I had to figure out how to handle the active state of a theme.  Initially I thought about updating the database every time the user changed the theme, but realized the _flask session_ object would be much faster.  By storing the active theme in the session, the CSS is applied instantly to all pages without needing to query the database.
 
 #### Requirements:
 This project uses:
