@@ -63,7 +63,7 @@ main {
     padding: 20px;
 }
 
-/* The Container */
+/* The timer container */
 .container {
     width: 95%;
     max-width: 450px;
@@ -75,10 +75,10 @@ main {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 15px; /* Keeps vertical spacing even */
+    gap: 15px; 
 }
 
-/* Timer Display - Fixed Gap */
+/* Timer Display */
 h1 {
     margin: 0;
     font-size: 2.5rem;
@@ -89,7 +89,7 @@ h1 {
     font-weight: bold;
     color: #e94560;
     font-family: monospace;
-    line-height: 1; /* Eliminates the dead space above/below numbers */
+    line-height: 1; 
     margin: 0;
 }
 
@@ -102,7 +102,7 @@ summary {
     cursor: pointer;
     color: #888;
     font-size: 0.9rem;
-    display: list-item; /* Ensures the arrow shows */
+    display: list-item; 
     outline: none;
 }
 
@@ -152,7 +152,7 @@ form button {
     width: 100%;
 }
 
-/* 9. XP Display */
+/* XP Display */
 p {
     margin: 0;
     padding-top: 10px;
@@ -203,7 +203,7 @@ table tr:hover td:nth-child(2) {
     }
 }
 
-/* Themes */
+/* ---Themes--- */
 /* Shop Grid */
 .shop-layout {
     display: block !important; /* Overrides the flex-centering in .container */

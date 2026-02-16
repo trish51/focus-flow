@@ -10,6 +10,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 db = SQL("sqlite:///focus.db")
 
+# Calling this function ensures the respective functions don't run unless the user is logged in
+# If you aren't logged in, it kicks you out of pages and ensures you are in the login/register pages
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -21,24 +23,27 @@ def login_required(f):
 @app.route("/")
 @login_required
 def index():
-    # 1. Get the user_id from the session
+    # Get the user_id from the session
     user_id = session.get("user_id")
     
-    # 2. Check the database
+    # Gets the users details
     rows = db.execute("SELECT * FROM users WHERE id = ?", user_id)
     
-    # 3. If user doesn't exist, clear session and go to login
+    # If user doesn't exist, clear session and go to login
     if not rows:
         session.clear()
         return redirect("/login")
         
+    # Returns the users details
     return render_template("index.html", user=rows[0])
 
 # Register Logic
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    # Clear any previous sessions
     session.clear()
 
+    # Stores user inputs in variables
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -52,21 +57,24 @@ def register():
         elif password != confirmation:
             return "Passwords do not match", 400
         
+        # hases the password so its stored securly 
         hash = generate_password_hash(password)
         
         # Adding to the database
+        # Ensures the username doesn't already exist
         try:
             new_user_id = db.execute(
                 "INSERT INTO users (username, hash) VALUES (?,?)",
                 username, hash
             )
 
-            # Logs them in immediatley
+            # Logs them in immediatley and puts them on the timer page
             session["user_id"] = new_user_id
             session["username"] = username
             return redirect("/")
         except ValueError:
             return "Username already exists.", 400
+    # If user cannot be logged in, puts them back on the register page
     return render_template("register.html")
 
 
@@ -76,6 +84,7 @@ def login():
     # Clear any previous sessions
     session.clear()
 
+    # Stores user inputs in variables
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -86,7 +95,7 @@ def login():
             username
         )
 
-        # Checks if the username exists
+        # Checks if the username exists and if it links to the correct password
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], password):
             return "Invalid username and/or password", 403
 
@@ -94,16 +103,18 @@ def login():
         session["user_id"] = rows[0]["id"]
         session["username"] = rows[0]["username"]
 
-        # Ensures user selected theme is on
+        # Ensures the theme the user previously selected is on
         session["user_id"] = rows[0]["id"]
         session["username"] = rows[0]["username"]
         session["theme"] = rows[0]["active_theme"]
 
+        # Logs them in immediatley and puts them on the timer page
         return redirect("/")
 
+    # If user cannot be logged in, puts them back on the login page
     return render_template("login.html")
 
-# History
+# History page
 @app.route("/history")
 @login_required
 def history():
@@ -115,6 +126,7 @@ def history():
         ORDER BY timestamp DESC
     """, session["user_id"])
     
+    # Returns the historical infomation we have from the user 
     return render_template("history.html", sessions=sessions)
 
 # XP stop
@@ -130,26 +142,29 @@ def store():
     )
     user_xp = user_data[0]["xp"]
 
-    # Get items from the store
+    # Get all the items availible in the store
     items = db.execute("SELECT * FROM items")
 
-    # Get ids of what the user already bought
+    # Get the ids of the items the user already bought
     owned_rows = db.execute(
         "SELECT item_id FROM purchases WHERE user_id = ?",
         user_id
     )
     owned_ids = [row["item_id"] for row in owned_rows]
 
+    # returns all items to be displayed in the store
     return render_template("store.html", items=items, user_xp=user_xp, owned_ids=owned_ids)
 
 # Spending XP
 @app.route("/buy",  methods=["POST"])
 @login_required
 def buy():
+
+    # Gets the item ids from the items that are clicked by the user
     item_id = request.form.get("item_id")
     user_id = session["user_id"]
 
-    # Item details
+    # Item details - alsp checks if the item exists
     item = db.execute(
         "SELECT * FROM items WHERE id = ?",
         item_id
@@ -159,7 +174,7 @@ def buy():
 
     price = item[0]["price"]
 
-    # Check if user can afford
+    # Check if user has enough XP to buy the item
     user_data = db.execute(
         "SELECT xp FROM users WHERE id = ?",
         user_id
@@ -169,7 +184,8 @@ def buy():
     if current_xp < price:
         return "Not enough XP", 400
 
-    # Deduct XP and record purchases
+    # If the user can afford
+    # Deducts users XP and record purchases
     db.execute(
         "UPDATE users SET xp = xp - ? WHERE id = ?", 
         price, user_id
@@ -179,6 +195,7 @@ def buy():
         user_id, item_id
     )
 
+    # Keeps the user on the store page after a purchase
     return redirect("/store")
 
 # Equiping themes
@@ -188,7 +205,7 @@ def equip():
     item_id = request.form.get("item_id")
     user_id = session["user_id"]
 
-    # Check if default
+    # Check if the default theme is active
     if item_id == "0":
         db.execute(
             "UPDATE users SET active_theme = 'default' WHERE id = ?", 
@@ -197,14 +214,14 @@ def equip():
         session["theme"] = "default"
         return redirect("/store")
 
-    # Otherwise verify ownership of purchasable themes
+    # Otherwise verify ownership of purchasable themes 
     check = db.execute(
         "SELECT * FROM purchases WHERE user_id = ? AND item_id = ?", 
         user_id, item_id
     )
 
+    # gets the theme name to use it in CSS
     if check:
-        # get the name and use it in CSS
         item = db.execute(
             "SELECT name FROM items WHERE id = ?", 
             item_id
@@ -217,17 +234,21 @@ def equip():
         )
         session["theme"] = theme_name
     
+    # Keeps the user on the store page after equiping
     return redirect("/store")
 
 # Logout logic
 @app.route("/logout")
 def logout():
+
+    # Clears session and takes users to the login page
     session.clear()
     return redirect("/")
 
 
 # Log user data
 @app.route("/log_session", methods=["POST"])
+@login_required
 def log_session():
     # Get the data from the JS fetch request
     data = request.get_json()
@@ -248,6 +269,7 @@ def log_session():
         user_id, minutes, note
     )
 
+    # Returns that the logging of data was successful
     return jsonify({"success": True})
 
 if __name__ == "__main__":
