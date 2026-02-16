@@ -54,9 +54,9 @@ The _focus.db_ database is a relational SQLite database consisting of four main 
 - **_purchases_**: This is a table that uses a **Many-to-Many** relationship between _users_ and _items_.  By storing *user_id* and *item_id* together, the ownership of the item to the user can be verified, thus allowing the user to equip the item (theme).  This also ensures that if a user purchases an item, that item remains permanently unlocked for that users account.
 
 #### Design Choices:
-One of the challenges i had was the shop grid.  I decided to use CSS Grid with _grid-auto-rows: 1fr_ and _Flexbox_ for the cards.  This was to make sure that even if the descriptions were different lengths, the buttons would always line up perfectly at the bottom of each box.  I also chose to use **inline styles** for some specific button states to make sure any global CSS changes on other pages wouldn't break it.
+One of the challenges I had was the shop grid.  I decided to use CSS Grid with _grid-auto-rows: 1fr_ and _Flexbox_ for the cards.  This was to make sure that even if the descriptions were different lengths, the buttons would always line up perfectly at the bottom of each box.  I also chose to use **inline styles** for some specific button states to make sure any global CSS changes on other pages wouldn't break it.
 
-Beyond the Shop Grid, i had to figure out how to handle the active state of a theme.  Initially I thought about updating the database every time the user changed the theme, but realized the _flask session_ object would be much faster.  By storing the active theme in the session, the CSS is applied instantly to all pages without needing to query the database or reload the page.
+Beyond the Shop Grid, I had to figure out how to handle the active state of a theme.  Initially I thought about updating the database every time the user changed the theme, but realized the _flask session_ object would be much faster.  By storing the active theme in the session, the CSS is applied instantly to all pages without needing to query the database or reload the page.
 
 #### Requirements:
 This project uses:
@@ -68,5 +68,5 @@ This project uses:
 - _Javascript_: For the countdown timer and real-time UI updates.
 
 #### Challenges:
-One of the trickiest thing I had to learn was syncing the JavaScript timer with the Flask backend.  I used the _fetch_ API to send a POST request to actually award the user with the XP only when the timer actually ran out.  Handling potential edge cases were also a challenge, ultimately I decided that the XP would only be granted if the timer fully hit zero, thus encouraging the users to fully commit to the 25 minute timer, reinforcing the core concept of the Pomodoro timer.
+One of the trickiest things I had to learn was syncing the JavaScript timer with the Flask backend.  I used the _fetch_ API to send a POST request to actually award the user with the XP only when the timer actually ran out.  Handling potential edge cases were also a challenge, ultimately I decided that the XP would only be granted if the timer fully hit zero, thus encouraging the users to fully commit to the 25 minute timer, reinforcing the core concept of the Pomodoro timer.
 

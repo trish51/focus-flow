@@ -57,7 +57,7 @@ def register():
         elif password != confirmation:
             return "Passwords do not match", 400
         
-        # hases the password so its stored securly 
+        # hashes the password so its stored securly 
         hash = generate_password_hash(password)
         
         # Adding to the database
@@ -101,11 +101,9 @@ def login():
 
         # Remeber which user logged in
         session["user_id"] = rows[0]["id"]
-        session["username"] = rows[0]["username"]
 
         # Ensures the theme the user previously selected is on
         session["user_id"] = rows[0]["id"]
-        session["username"] = rows[0]["username"]
         session["theme"] = rows[0]["active_theme"]
 
         # Logs them in immediatley and puts them on the timer page
@@ -164,7 +162,7 @@ def buy():
     item_id = request.form.get("item_id")
     user_id = session["user_id"]
 
-    # Item details - alsp checks if the item exists
+    # Item details - also checks if the item exists
     item = db.execute(
         "SELECT * FROM items WHERE id = ?",
         item_id
