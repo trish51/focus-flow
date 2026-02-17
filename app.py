@@ -101,9 +101,9 @@ def login():
 
         # Remeber which user logged in
         session["user_id"] = rows[0]["id"]
+        session["username"] = rows[0]["username"]
 
         # Ensures the theme the user previously selected is on
-        session["user_id"] = rows[0]["id"]
         session["theme"] = rows[0]["active_theme"]
 
         # Logs them in immediatley and puts them on the timer page

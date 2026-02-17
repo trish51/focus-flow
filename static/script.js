@@ -18,7 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateDisplay() {
         let minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
-        display.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+        const minStr = String(minutes).padStart(2, '0');
+        const secStr = String(seconds).padStart(2, '0');
+        
+        display.innerText = `${minStr}:${secStr}`;
     }
 
     startBtn.addEventListener('click', () => {

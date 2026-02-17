@@ -17,7 +17,7 @@
 
     <nav>
         {% if session["user_id"] %}
-            <div class="nav-user">Hello, {{ session["username"] }}</div>
+            <div class="nav-user">Hello, {{ session.username }}</div>
             <div class="nav-links">
             <a href="/">Timer</a>
             <a href="/history">History</a>
